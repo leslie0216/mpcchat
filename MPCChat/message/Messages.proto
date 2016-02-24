@@ -1,0 +1,15 @@
+syntax = "proto3";
+package wifiudpchat;
+
+
+message TransferMessage {
+ enum MsgType {
+    TEXT = 0;
+    PING = 1;
+    RESPONSE = 2;
+  }
+
+ string name = 1;
+ string message = 2;
+ MsgType messageType = 3;
+}
