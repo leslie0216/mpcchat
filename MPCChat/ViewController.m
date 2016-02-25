@@ -69,7 +69,7 @@
             NSLog(@"Received From > %@", message.name);
             NSLog(@"Received Message > %@", message.message);
             
-            NSString *history = [NSString stringWithFormat:@"%@: %@\n", message.name, message.message];
+            NSString *history = [NSString stringWithFormat:@"%@: %@\n\n", message.name, message.message];
             
             if (isPing) {
                 chatHistory = [history stringByAppendingString:chatHistory];
@@ -89,11 +89,11 @@
             NSTimeInterval totalTime = (([[NSDate date] timeIntervalSince1970] * 1000) - totalStartTime);
             NSNumber *numTime = [[NSNumber alloc] initWithDouble:timeInterval];
             [timerArray addObject:numTime];
-            if ([timerArray count] > 1000) {
+            if ([timerArray count] > 5000) {
                 [timerArray removeObjectAtIndex:0];
             }
             NSNumber *average = [timerArray valueForKeyPath:@"@avg.self"];
-            NSString *ping = [[NSString alloc]initWithFormat:@"(Ping) current : %f  avg : %f\n  count : %d  timeElapse : %f\n\n", timeInterval, [average doubleValue], [timerArray count], totalTime];
+            NSString *ping = [[NSString alloc]initWithFormat:@"(Ping) current : %f  avg : %f\n  count : %lu  timeElapse : %f\n\n", timeInterval, [average doubleValue], (unsigned long)[timerArray count], totalTime];
             [self.textview_history_msg setText:[ping stringByAppendingString:chatHistory]];
             if (isPing) {
                 [self doPing];
@@ -131,11 +131,8 @@
         startTime = [[NSDate date] timeIntervalSince1970] * 1000;
     }
     
-    MCSessionSendDataMode mode = MCSessionSendDataReliable;
-    if (!self.swReliable.isOn) {
-        mode = MCSessionSendDataUnreliable;
-    }
-    
+    MCSessionSendDataMode mode = self.swReliable.isOn ? MCSessionSendDataReliable : MCSessionSendDataUnreliable;
+
     [self.appDelegate.mpcHandler.session sendData:[packet data] toPeers:self.appDelegate.mpcHandler.session.connectedPeers withMode:mode error:&error];
     
     if (error != nil) {
