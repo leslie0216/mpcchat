@@ -86,14 +86,19 @@
         case TransferMessage_MsgType_Response:
         {
             NSTimeInterval timeInterval = (([[NSDate date] timeIntervalSince1970] * 1000) - startTime);
-            NSTimeInterval totalTime = (([[NSDate date] timeIntervalSince1970] * 1000) - totalStartTime);
+            //NSTimeInterval totalTime = (([[NSDate date] timeIntervalSince1970] * 1000) - totalStartTime);
             NSNumber *numTime = [[NSNumber alloc] initWithDouble:timeInterval];
             [timerArray addObject:numTime];
-            if ([timerArray count] > 5000) {
+            BOOL isExceed = [timerArray count] > 2000 ? YES : NO;
+            if (isExceed) {
                 [timerArray removeObjectAtIndex:0];
             }
             NSNumber *average = [timerArray valueForKeyPath:@"@avg.self"];
-            NSString *ping = [[NSString alloc]initWithFormat:@"(Ping) current : %f  avg : %f\n  count : %lu  timeElapse : %f\n\n", timeInterval, [average doubleValue], (unsigned long)[timerArray count], totalTime];
+            NSNumber *std = nil;
+            if (isExceed) {
+                std = [self standardDeviationOf:timerArray mean:[average doubleValue]];
+            }
+            NSString *ping = [[NSString alloc]initWithFormat:@"(Ping) current : %f  avg : %f\n  count : %lu  stdev : %f\n\n", timeInterval, [average doubleValue], (unsigned long)[timerArray count], [std doubleValue]];
             [self.textview_history_msg setText:[ping stringByAppendingString:chatHistory]];
             if (isPing) {
                 [self doPing];
@@ -147,7 +152,7 @@
             return;
         }
         
-        NSString *history = [NSString stringWithFormat:@"Me: %@\n\n", self.textview_edit_msg.text];
+        NSString *history = [NSString stringWithFormat:@"I: %@\n\n", self.textview_edit_msg.text];
         
         [self.textview_history_msg setText:[history stringByAppendingString:self.textview_history_msg.text]];
         
@@ -211,6 +216,22 @@
 {
     startTime = 0.0;
     [self sendPacket:@"p" ping:YES response:NO];
+}
+
+- (NSNumber *)standardDeviationOf:(NSArray *)array mean:(double)mean
+{
+    if(![array count]) return nil;
+    
+    double sumOfSquaredDifferences = 0.0;
+    
+    for(NSNumber *number in array)
+    {
+        double valueOfNumber = [number doubleValue];
+        double difference = valueOfNumber - mean;
+        sumOfSquaredDifferences += difference * difference;
+    }
+    
+    return [NSNumber numberWithDouble:sqrt(sumOfSquaredDifferences / [array count])];
 }
 
 @end
