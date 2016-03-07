@@ -70,7 +70,7 @@
     if (message.messageType == TransferMessage_MsgType_Ping) {
         TransferMessage *packet = [[TransferMessage alloc]init];
         packet.name = [[UIDevice currentDevice] name];
-        packet.message = @"";
+        packet.message = message.message;
         packet.messageType = TransferMessage_MsgType_Response;
         
         MCSessionSendDataMode mode = isReliableMode ? MCSessionSendDataReliable : MCSessionSendDataUnreliable;
@@ -82,7 +82,7 @@
                                 @"peerID": peerID,
                                 @"time": time};
     
-    
+    NSLog(@"Receive time = %f \n", [time doubleValue]);
     
         dispatch_async(dispatch_get_main_queue(), ^{
     

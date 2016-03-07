@@ -48,11 +48,18 @@
 
 -(BOOL)createLogWithFilename:(NSString *)fn
 {
+    if ([fn isEqualToString:@""]) {
+        filename = @".txt";
+    } else {
+        filename = [NSString stringWithFormat:@"_%@.txt", fn];
+    }
+    
+    
+    NSString* filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    
     NSBundle *bundle = [NSBundle mainBundle];
     NSDictionary *info = [bundle infoDictionary];
     NSString *prodName = [info objectForKey:@"CFBundleDisplayName"];
-    filename = [fn stringByAppendingString:@".txt"];
-    NSString* filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     
     NSDate *date = [NSDate date];
     NSCalendar *calendar = [NSCalendar currentCalendar];
@@ -64,7 +71,7 @@
     NSInteger minute = [components minute];
     NSInteger second = [components second];
     
-    NSString *filePrefix = [NSString stringWithFormat:@"%@_%d_%d_%d_%d_%d_%d_", prodName,year, month, day, hour, minute, second];
+    NSString *filePrefix = [NSString stringWithFormat:@"%@_%d_%d_%d_%d_%d_%d", prodName,year, month, day, hour, minute, second];
     NSString *fullFilename = [filePrefix stringByAppendingString:filename];
     
     fileFullpath = [filePath stringByAppendingPathComponent:fullFilename];
@@ -77,7 +84,7 @@
     } else {
         // try to resolve file name conflict
         NSInteger nanosecond = [components nanosecond];
-        filePrefix = [filePrefix stringByAppendingString:[NSString stringWithFormat:@"%d_", nanosecond]];
+        filePrefix = [filePrefix stringByAppendingString:[NSString stringWithFormat:@"%d", nanosecond]];
         NSString *fullFilename = [filePrefix stringByAppendingString:filename];
         fileFullpath = [filePath stringByAppendingPathComponent:fullFilename];
         if (![[NSFileManager defaultManager] fileExistsAtPath:fileFullpath]) {

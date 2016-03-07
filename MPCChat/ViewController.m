@@ -19,6 +19,7 @@
     NSMutableArray *timerArray;
     BOOL isPing;
     NSString *chatHistory;
+    NSString *currentPingToken;
     MPCLog *myLog;
 }
 
@@ -89,8 +90,13 @@
             break;
         case TransferMessage_MsgType_Response:
         {
+            NSString *token = message.message;
+            if (![token isEqualToString:currentPingToken]) {
+                break;
+            }
             NSTimeInterval receiveTime = [[[notification userInfo] objectForKey:@"time"] doubleValue];
-
+            NSLog(@"Receive time(r) = %f \n", receiveTime);
+            NSLog(@"Start time(r) = %f \n", startTime);
             NSTimeInterval timeInterval = receiveTime - startTime;
             NSTimeInterval timeInterval2 = (([[NSDate date] timeIntervalSince1970] * 1000) - startTime);
             //NSTimeInterval totalTime = (([[NSDate date] timeIntervalSince1970] * 1000) - totalStartTime);
@@ -147,6 +153,9 @@
     
     if (ping) {
         startTime = [[NSDate date] timeIntervalSince1970] * 1000;
+        currentPingToken = [[NSUUID UUID] UUIDString];
+        packet.message = currentPingToken;
+        NSLog(@"Start time = %f \n", startTime);
     }
     
     MCSessionSendDataMode mode = self.swReliable.isOn ? MCSessionSendDataReliable : MCSessionSendDataUnreliable;
