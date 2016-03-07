@@ -21,4 +21,6 @@
 - (void) setupBrowser;
 - (void) advertiseSelf:(BOOL)advertise;
 
+- (void) updateSendMode:(BOOL)isReliable;
+
 @end

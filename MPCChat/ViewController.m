@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "AppDelegate.h"
 #import "Messages.pbobjc.h"
+#import "MPCLog.h"
 
 @interface ViewController ()
 {
@@ -18,6 +19,7 @@
     NSMutableArray *timerArray;
     BOOL isPing;
     NSString *chatHistory;
+    MPCLog *myLog;
 }
 
 @property(strong, nonatomic) AppDelegate *appDelegate;
@@ -43,6 +45,7 @@
         self.lbStatus.text = @"Connected";
         self.btnSend.enabled = TRUE;
         self.btnPing.enabled = TRUE;
+        [self.appDelegate.mpcHandler updateSendMode:self.swReliable.isOn];
     } else {
         self.lbStatus.text = @"Not Connected";
         self.btnSend.enabled = FALSE;
@@ -80,12 +83,16 @@
             break;
         case TransferMessage_MsgType_Ping:
         {
-            [self sendPacket:@"r" ping:NO response:YES];
+            //handled by MPCHandler
+            //[self sendPacket:@"r" ping:NO response:YES];
         }
             break;
         case TransferMessage_MsgType_Response:
         {
-            NSTimeInterval timeInterval = (([[NSDate date] timeIntervalSince1970] * 1000) - startTime);
+            NSTimeInterval receiveTime = [[[notification userInfo] objectForKey:@"time"] doubleValue];
+
+            NSTimeInterval timeInterval = receiveTime - startTime;
+            NSTimeInterval timeInterval2 = (([[NSDate date] timeIntervalSince1970] * 1000) - startTime);
             //NSTimeInterval totalTime = (([[NSDate date] timeIntervalSince1970] * 1000) - totalStartTime);
             NSNumber *numTime = [[NSNumber alloc] initWithDouble:timeInterval];
             [timerArray addObject:numTime];
@@ -98,7 +105,13 @@
             if (isExceed) {
                 std = [self standardDeviationOf:timerArray mean:[average doubleValue]];
             }
-            NSString *ping = [[NSString alloc]initWithFormat:@"(Ping) current : %f  avg : %f\n  count : %lu  stdev : %f\n\n", timeInterval, [average doubleValue], (unsigned long)[timerArray count], [std doubleValue]];
+            NSString *ping = [[NSString alloc]initWithFormat:@"(Ping) current : %f (%f)  avg : %f\n  count : %lu  stdev : %f\n\n", timeInterval, timeInterval2, [average doubleValue], (unsigned long)[timerArray count], [std doubleValue]];
+            
+            // log
+            NSString *log = [[NSString alloc]initWithFormat:@"%f,%f\n", timeInterval, ([[NSDate date] timeIntervalSince1970] * 1000)];
+            [self writeLog:log];
+             
+            
             [self.textview_history_msg setText:[ping stringByAppendingString:chatHistory]];
             if (isPing) {
                 [self doPing];
@@ -160,6 +173,11 @@
     }
 }
 
+- (IBAction)changeMode:(id)sender
+{
+    [self.appDelegate.mpcHandler updateSendMode:self.swReliable.isOn];
+}
+
 - (IBAction)sendMsg:(id)sender
 {
     self.btnPing.enabled = FALSE;
@@ -198,6 +216,7 @@
     [self.btnPing setTitle:@"Stop Ping" forState:UIControlStateNormal];
     chatHistory = self.textview_history_msg.text;
     totalStartTime = [[NSDate date] timeIntervalSince1970] * 1000;
+    [self startLog];
     [self doPing];
     
 }
@@ -232,6 +251,23 @@
     }
     
     return [NSNumber numberWithDouble:sqrt(sumOfSquaredDifferences / [array count])];
+}
+
+-(void)startLog
+{
+    if (myLog == nil) {
+        myLog = [[MPCLog alloc]init];
+    }
+    
+    [myLog newLogFile];
+    [self writeLog:@"ping, timestamp\n"];
+}
+
+-(void)writeLog:(NSString *)log
+{
+    if (myLog != nil) {
+        [myLog write:log];
+    }
 }
 
 @end

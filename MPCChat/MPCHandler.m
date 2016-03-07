@@ -7,8 +7,20 @@
 //
 
 #import "MPCHandler.h"
+#import "Messages.pbobjc.h"
+
+@interface MPCHandler()
+{
+    BOOL isReliableMode;
+}
+@end
 
 @implementation MPCHandler
+
+- (void)updateSendMode:(BOOL)isReliable
+{
+    isReliableMode = isReliable;
+}
 
 - (void) setupPeerWithDisplayName:(NSString *)displayName
 {
@@ -50,14 +62,36 @@
 
 - (void) session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
 {
-    NSDictionary *userInfo = @{ @"data": data,
-                                @"peerID": peerID };
+    NSTimeInterval t = [[NSDate date] timeIntervalSince1970] * 1000;
+    NSNumber *time = [NSNumber numberWithDouble:t];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MPCChat_DidReceiveDataNotification"
+    TransferMessage *message = [[TransferMessage alloc] initWithData:data error:nil];
+
+    if (message.messageType == TransferMessage_MsgType_Ping) {
+        TransferMessage *packet = [[TransferMessage alloc]init];
+        packet.name = [[UIDevice currentDevice] name];
+        packet.message = @"";
+        packet.messageType = TransferMessage_MsgType_Response;
+        
+        MCSessionSendDataMode mode = isReliableMode ? MCSessionSendDataReliable : MCSessionSendDataUnreliable;
+
+        [self.session sendData:[packet data] toPeers:self.session.connectedPeers withMode:mode error:nil];
+
+    } else {
+        NSDictionary *userInfo = @{ @"data": data,
+                                @"peerID": peerID,
+                                @"time": time};
+    
+    
+    
+        dispatch_async(dispatch_get_main_queue(), ^{
+    
+    
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"MPCChat_DidReceiveDataNotification"
                                                             object:nil
                                                           userInfo:userInfo];
-    });
+        });
+    }
 }
 
 - (void) session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress
