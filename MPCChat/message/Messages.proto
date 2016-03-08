@@ -1,5 +1,5 @@
 syntax = "proto3";
-package wifiudpchat;
+package mpcchat;
 
 
 message TransferMessage {
@@ -12,4 +12,5 @@ message TransferMessage {
  string name = 1;
  string message = 2;
  MsgType messageType = 3;
+ double responseTime = 4;
 }

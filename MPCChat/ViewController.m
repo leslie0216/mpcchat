@@ -95,10 +95,10 @@
                 break;
             }
             NSTimeInterval receiveTime = [[[notification userInfo] objectForKey:@"time"] doubleValue];
-            NSLog(@"Receive time(r) = %f \n", receiveTime);
-            NSLog(@"Start time(r) = %f \n", startTime);
-            NSTimeInterval timeInterval = receiveTime - startTime;
-            NSTimeInterval timeInterval2 = (([[NSDate date] timeIntervalSince1970] * 1000) - startTime);
+            //NSLog(@"Receive time(r) = %f \n", receiveTime);
+            //NSLog(@"Start time(r) = %f \n", startTime);
+            NSTimeInterval timeInterval = receiveTime - startTime - message.responseTime;
+            //NSTimeInterval timeInterval2 = (([[NSDate date] timeIntervalSince1970] * 1000) - startTime);
             //NSTimeInterval totalTime = (([[NSDate date] timeIntervalSince1970] * 1000) - totalStartTime);
             NSNumber *numTime = [[NSNumber alloc] initWithDouble:timeInterval];
             [timerArray addObject:numTime];
@@ -111,7 +111,7 @@
             if (isExceed) {
                 std = [self standardDeviationOf:timerArray mean:[average doubleValue]];
             }
-            NSString *ping = [[NSString alloc]initWithFormat:@"(Ping) current : %f (%f)  avg : %f\n  count : %lu  stdev : %f\n\n", timeInterval, timeInterval2, [average doubleValue], (unsigned long)[timerArray count], [std doubleValue]];
+            NSString *ping = [[NSString alloc]initWithFormat:@"(Ping) current : %f avg : %f\n  count : %lu  stdev : %f\n\n", timeInterval, [average doubleValue], (unsigned long)[timerArray count], [std doubleValue]];
             
             // log
             NSString *log = [[NSString alloc]initWithFormat:@"%f,%f\n", timeInterval, ([[NSDate date] timeIntervalSince1970] * 1000)];
@@ -155,7 +155,7 @@
         startTime = [[NSDate date] timeIntervalSince1970] * 1000;
         currentPingToken = [[NSUUID UUID] UUIDString];
         packet.message = currentPingToken;
-        NSLog(@"Start time = %f \n", startTime);
+        //NSLog(@"Start time = %f \n", startTime);
     }
     
     MCSessionSendDataMode mode = self.swReliable.isOn ? MCSessionSendDataReliable : MCSessionSendDataUnreliable;
@@ -269,7 +269,7 @@
     }
     
     [myLog newLogFile];
-    [self writeLog:@"ping, timestamp\n"];
+    //[self writeLog:@"ping, timestamp\n"];
 }
 
 -(void)writeLog:(NSString *)log

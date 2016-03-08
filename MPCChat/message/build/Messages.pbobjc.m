@@ -19,7 +19,7 @@ static GPBFileDescriptor *MessagesRoot_FileDescriptor(void) {
   static GPBFileDescriptor *descriptor = NULL;
   if (!descriptor) {
     GPBDebugCheckRuntimeVersion();
-    descriptor = [[GPBFileDescriptor alloc] initWithPackage:@"wifiudpchat"
+    descriptor = [[GPBFileDescriptor alloc] initWithPackage:@"mpcchat"
                                                      syntax:GPBFileSyntaxProto3];
   }
   return descriptor;
@@ -32,12 +32,14 @@ static GPBFileDescriptor *MessagesRoot_FileDescriptor(void) {
 @dynamic name;
 @dynamic message;
 @dynamic messageType;
+@dynamic responseTime;
 
 typedef struct TransferMessage__storage_ {
   uint32_t _has_storage_[1];
   TransferMessage_MsgType messageType;
   NSString *name;
   NSString *message;
+  double responseTime;
 } TransferMessage__storage_;
 
 // This method is threadsafe because it is initially called
@@ -79,6 +81,17 @@ typedef struct TransferMessage__storage_ {
         .dataTypeSpecific.enumDescFunc = TransferMessage_MsgType_EnumDescriptor,
         .fieldOptions = NULL,
       },
+      {
+        .name = "responseTime",
+        .number = TransferMessage_FieldNumber_ResponseTime,
+        .hasIndex = 3,
+        .flags = GPBFieldOptional | GPBFieldTextFormatNameCustom,
+        .dataType = GPBDataTypeDouble,
+        .offset = offsetof(TransferMessage__storage_, responseTime),
+        .defaultValue.valueDouble = 0,
+        .dataTypeSpecific.className = NULL,
+        .fieldOptions = NULL,
+      },
     };
     static GPBMessageEnumDescription enums[] = {
       { .enumDescriptorFunc = TransferMessage_MsgType_EnumDescriptor },
@@ -86,7 +99,7 @@ typedef struct TransferMessage__storage_ {
 #if GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     const char *extraTextFormatInfo = NULL;
 #else
-    static const char *extraTextFormatInfo = "\001\003\013\000";
+    static const char *extraTextFormatInfo = "\002\003\013\000\004\014\000";
 #endif  // GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[TransferMessage class]

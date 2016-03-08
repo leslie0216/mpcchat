@@ -74,15 +74,16 @@
         packet.messageType = TransferMessage_MsgType_Response;
         
         MCSessionSendDataMode mode = isReliableMode ? MCSessionSendDataReliable : MCSessionSendDataUnreliable;
-
+        NSTimeInterval t2 = [[NSDate date] timeIntervalSince1970] * 1000;
+        packet.responseTime = t2 - t;
+        //NSLog(@"Response time = %f", (t2-t));
         [self.session sendData:[packet data] toPeers:self.session.connectedPeers withMode:mode error:nil];
-
     } else {
         NSDictionary *userInfo = @{ @"data": data,
                                 @"peerID": peerID,
                                 @"time": time};
     
-    NSLog(@"Receive time = %f \n", [time doubleValue]);
+    //NSLog(@"Receive time = %f \n", [time doubleValue]);
     
         dispatch_async(dispatch_get_main_queue(), ^{
     

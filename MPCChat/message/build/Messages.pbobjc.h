@@ -43,6 +43,7 @@ typedef GPB_ENUM(TransferMessage_FieldNumber) {
   TransferMessage_FieldNumber_Name = 1,
   TransferMessage_FieldNumber_Message = 2,
   TransferMessage_FieldNumber_MessageType = 3,
+  TransferMessage_FieldNumber_ResponseTime = 4,
 };
 
 @interface TransferMessage : GPBMessage
@@ -52,6 +53,8 @@ typedef GPB_ENUM(TransferMessage_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *message;
 
 @property(nonatomic, readwrite) TransferMessage_MsgType messageType;
+
+@property(nonatomic, readwrite) double responseTime;
 
 @end
 
