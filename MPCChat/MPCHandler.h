@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
+#import <sys/socket.h>
 
 @interface MPCHandler : NSObject<MCSessionDelegate>
 

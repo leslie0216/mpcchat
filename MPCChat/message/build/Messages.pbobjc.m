@@ -29,15 +29,15 @@ static GPBFileDescriptor *MessagesRoot_FileDescriptor(void) {
 
 @implementation TransferMessage
 
-@dynamic name;
 @dynamic message;
 @dynamic messageType;
 @dynamic responseTime;
+@dynamic isReliable;
 
 typedef struct TransferMessage__storage_ {
   uint32_t _has_storage_[1];
+  BOOL isReliable;
   TransferMessage_MsgType messageType;
-  NSString *name;
   NSString *message;
   double responseTime;
 } TransferMessage__storage_;
@@ -49,20 +49,9 @@ typedef struct TransferMessage__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "name",
-        .number = TransferMessage_FieldNumber_Name,
-        .hasIndex = 0,
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-        .offset = offsetof(TransferMessage__storage_, name),
-        .defaultValue.valueString = nil,
-        .dataTypeSpecific.className = NULL,
-        .fieldOptions = NULL,
-      },
-      {
         .name = "message",
         .number = TransferMessage_FieldNumber_Message,
-        .hasIndex = 1,
+        .hasIndex = 0,
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
         .offset = offsetof(TransferMessage__storage_, message),
@@ -73,7 +62,7 @@ typedef struct TransferMessage__storage_ {
       {
         .name = "messageType",
         .number = TransferMessage_FieldNumber_MessageType,
-        .hasIndex = 2,
+        .hasIndex = 1,
         .flags = GPBFieldOptional | GPBFieldTextFormatNameCustom | GPBFieldHasEnumDescriptor,
         .dataType = GPBDataTypeEnum,
         .offset = offsetof(TransferMessage__storage_, messageType),
@@ -84,11 +73,22 @@ typedef struct TransferMessage__storage_ {
       {
         .name = "responseTime",
         .number = TransferMessage_FieldNumber_ResponseTime,
-        .hasIndex = 3,
+        .hasIndex = 2,
         .flags = GPBFieldOptional | GPBFieldTextFormatNameCustom,
         .dataType = GPBDataTypeDouble,
         .offset = offsetof(TransferMessage__storage_, responseTime),
         .defaultValue.valueDouble = 0,
+        .dataTypeSpecific.className = NULL,
+        .fieldOptions = NULL,
+      },
+      {
+        .name = "isReliable",
+        .number = TransferMessage_FieldNumber_IsReliable,
+        .hasIndex = 3,
+        .flags = GPBFieldOptional | GPBFieldTextFormatNameCustom,
+        .dataType = GPBDataTypeBool,
+        .offset = offsetof(TransferMessage__storage_, isReliable),
+        .defaultValue.valueBool = NO,
         .dataTypeSpecific.className = NULL,
         .fieldOptions = NULL,
       },
@@ -99,7 +99,7 @@ typedef struct TransferMessage__storage_ {
 #if GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     const char *extraTextFormatInfo = NULL;
 #else
-    static const char *extraTextFormatInfo = "\002\003\013\000\004\014\000";
+    static const char *extraTextFormatInfo = "\003\002\013\000\003\014\000\004\n\000";
 #endif  // GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[TransferMessage class]

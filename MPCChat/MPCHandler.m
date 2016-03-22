@@ -12,6 +12,7 @@
 @interface MPCHandler()
 {
     BOOL isReliableMode;
+    NSString *currentToken;
 }
 @end
 
@@ -62,28 +63,38 @@
 
 - (void) session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
 {
-    NSTimeInterval t = [[NSDate date] timeIntervalSince1970] * 1000;
+    CFTimeInterval t = CACurrentMediaTime() * 1000;
     NSNumber *time = [NSNumber numberWithDouble:t];
     
     TransferMessage *message = [[TransferMessage alloc] initWithData:data error:nil];
 
     if (message.messageType == TransferMessage_MsgType_Ping) {
+        
+        
         TransferMessage *packet = [[TransferMessage alloc]init];
-        packet.name = [[UIDevice currentDevice] name];
         packet.message = message.message;
         packet.messageType = TransferMessage_MsgType_Response;
         
-        MCSessionSendDataMode mode = isReliableMode ? MCSessionSendDataReliable : MCSessionSendDataUnreliable;
-        NSTimeInterval t2 = [[NSDate date] timeIntervalSince1970] * 1000;
+        MCSessionSendDataMode mode = message.isReliable ? MCSessionSendDataReliable : MCSessionSendDataUnreliable;
+        
+        packet.isReliable = message.isReliable;
+
+        NSTimeInterval t2 = CACurrentMediaTime() * 1000;
         packet.responseTime = t2 - t;
         //NSLog(@"Response time = %f", (t2-t));
-        [self.session sendData:[packet data] toPeers:self.session.connectedPeers withMode:mode error:nil];
+        
+        NSData *sendData = [packet data];
+
+        [self.session sendData:sendData toPeers:self.session.connectedPeers withMode:mode error:nil];
+        
+        NSLog(@"send response with token : %@ and local response time : %f", message.message, packet.responseTime);
+        
     } else {
         NSDictionary *userInfo = @{ @"data": data,
                                 @"peerID": peerID,
                                 @"time": time};
     
-    //NSLog(@"Receive time = %f \n", [time doubleValue]);
+    NSLog(@"Receive time = %f with token : %@ \n", t, message.message);
     
         dispatch_async(dispatch_get_main_queue(), ^{
     

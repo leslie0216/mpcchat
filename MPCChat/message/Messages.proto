@@ -9,8 +9,8 @@ message TransferMessage {
     RESPONSE = 2;
   }
 
- string name = 1;
- string message = 2;
- MsgType messageType = 3;
- double responseTime = 4;
+ string message = 1;
+ MsgType messageType = 2;
+ double responseTime = 3;
+ bool isReliable = 4;
 }

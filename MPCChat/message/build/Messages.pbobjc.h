@@ -40,21 +40,21 @@ BOOL TransferMessage_MsgType_IsValidValue(int32_t value);
 #pragma mark - TransferMessage
 
 typedef GPB_ENUM(TransferMessage_FieldNumber) {
-  TransferMessage_FieldNumber_Name = 1,
-  TransferMessage_FieldNumber_Message = 2,
-  TransferMessage_FieldNumber_MessageType = 3,
-  TransferMessage_FieldNumber_ResponseTime = 4,
+  TransferMessage_FieldNumber_Message = 1,
+  TransferMessage_FieldNumber_MessageType = 2,
+  TransferMessage_FieldNumber_ResponseTime = 3,
+  TransferMessage_FieldNumber_IsReliable = 4,
 };
 
 @interface TransferMessage : GPBMessage
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *name;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *message;
 
 @property(nonatomic, readwrite) TransferMessage_MsgType messageType;
 
 @property(nonatomic, readwrite) double responseTime;
+
+@property(nonatomic, readwrite) BOOL isReliable;
 
 @end
 

@@ -20,6 +20,7 @@
 		9BB28CFE1C7E43EE0001C1F9 /* Messages.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB28CFC1C7E43EE0001C1F9 /* Messages.pbobjc.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9BB28D1B1C7E44100001C1F9 /* GPBProtocolBuffers.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB28CFF1C7E44100001C1F9 /* GPBProtocolBuffers.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9BB28D1E1C7E4A920001C1F9 /* OptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BB28D1C1C7E4A920001C1F9 /* OptionsViewController.m */; };
+		9BC24EF41CA0FE3F005BB6EF /* RRFPSBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BC24EF31CA0FE3F005BB6EF /* RRFPSBar.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,8 @@
 		9BB28D1A1C7E44100001C1F9 /* GPBWireFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPBWireFormat.h; path = message/protobuf/GPBWireFormat.h; sourceTree = "<group>"; };
 		9BB28D1C1C7E4A920001C1F9 /* OptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsViewController.m; sourceTree = "<group>"; };
 		9BB28D1D1C7E4A920001C1F9 /* OptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsViewController.h; sourceTree = "<group>"; };
+		9BC24EF21CA0FE3F005BB6EF /* RRFPSBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRFPSBar.h; sourceTree = "<group>"; };
+		9BC24EF31CA0FE3F005BB6EF /* RRFPSBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRFPSBar.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +145,8 @@
 		9BB28CC31C7E421B0001C1F9 /* MPCChat */ = {
 			isa = PBXGroup;
 			children = (
+				9BC24EF21CA0FE3F005BB6EF /* RRFPSBar.h */,
+				9BC24EF31CA0FE3F005BB6EF /* RRFPSBar.m */,
 				9BB28CFA1C7E43BC0001C1F9 /* ProtocolBuffers */,
 				9BB28D1D1C7E4A920001C1F9 /* OptionsViewController.h */,
 				9BB28D1C1C7E4A920001C1F9 /* OptionsViewController.m */,
@@ -368,6 +373,7 @@
 				9BB28CC91C7E421B0001C1F9 /* AppDelegate.m in Sources */,
 				9BB28D1B1C7E44100001C1F9 /* GPBProtocolBuffers.m in Sources */,
 				9BB28CFE1C7E43EE0001C1F9 /* Messages.pbobjc.m in Sources */,
+				9BC24EF41CA0FE3F005BB6EF /* RRFPSBar.m in Sources */,
 				9B543C681C8DE15B0084D2D4 /* MPCLog.m in Sources */,
 				9BB28CC61C7E421B0001C1F9 /* main.m in Sources */,
 				9BB28D1E1C7E4A920001C1F9 /* OptionsViewController.m in Sources */,

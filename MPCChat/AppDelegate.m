@@ -8,6 +8,11 @@
 
 #import "AppDelegate.h"
 
+// Include only if app is is not optimized (aka debug build)
+#ifndef __OPTIMIZE__
+#import "RRFPSBar.h"
+#endif
+
 @interface AppDelegate ()
 
 @end
@@ -18,6 +23,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.mpcHandler = [[MPCHandler alloc] init];
+    
+#ifndef __OPTIMIZE__
+    [[RRFPSBar sharedInstance] setHidden:NO];
+#endif
+
     return YES;
 }
 
