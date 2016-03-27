@@ -68,7 +68,6 @@
         self.lbStatus.text = @"Connected";
         self.btnSend.enabled = TRUE;
         self.btnPing.enabled = TRUE;
-        [self.appDelegate.mpcHandler updateSendMode:self.swReliable.isOn];
     } else {
         self.lbStatus.text = @"Not Connected";
         self.btnSend.enabled = FALSE;
@@ -232,11 +231,6 @@
         
         [self.textview_edit_msg setText:@""];
     }
-}
-
-- (IBAction)changeMode:(id)sender
-{
-    [self.appDelegate.mpcHandler updateSendMode:self.swReliable.isOn];
 }
 
 - (IBAction)sendMsg:(id)sender

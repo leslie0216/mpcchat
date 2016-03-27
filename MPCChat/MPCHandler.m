@@ -11,17 +11,11 @@
 
 @interface MPCHandler()
 {
-    BOOL isReliableMode;
     NSString *currentToken;
 }
 @end
 
 @implementation MPCHandler
-
-- (void)updateSendMode:(BOOL)isReliable
-{
-    isReliableMode = isReliable;
-}
 
 - (void) setupPeerWithDisplayName:(NSString *)displayName
 {

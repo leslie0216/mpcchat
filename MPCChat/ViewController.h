@@ -19,7 +19,6 @@
 
 - (IBAction)sendMsg:(id)sender;
 - (IBAction)ping:(id)sender;
-- (IBAction)changeMode:(id)sender;
 
 @end
 
